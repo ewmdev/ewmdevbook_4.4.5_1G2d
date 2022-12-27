@@ -23,13 +23,13 @@ CLASS ZCL_IM_HU_BASICS_HUHDR IMPLEMENTATION.
           lt_packspec TYPE /scwm/tt_guid_ps,
           lt_pscont   TYPE /scwm/tt_packspec_nested.
 
-    BREAK-POINT ID zewmdevbook_445.
+    BREAK-POINT ID zewmdevbook_1g2d.
 
-* Get WCR from buffer
+    "Get WCR from buffer
     DATA(ls_wcr) = zcl_im_who_sort=>get_wcr_to( ).
-* Check if buffer is filled
+    "Check if buffer is filled
     CHECK NOT ls_wcr IS INITIAL.
-* Get warehouse settings
+    "Get warehouse settings
     CALL FUNCTION '/SCWM/T340D_READ_SINGLE'
       EXPORTING
         iv_lgnum  = cs_huhdr-lgnum
@@ -41,7 +41,7 @@ CLASS ZCL_IM_HU_BASICS_HUHDR IMPLEMENTATION.
     IF sy-subrc <> 0.
       EXIT.
     ENDIF.
-* Get warehouse assignment
+    "Get warehouse assignment
     CALL FUNCTION '/SCWM/T300_MD_READ_SINGLE'
       EXPORTING
         iv_lgnum   = cs_huhdr-lgnum
@@ -53,10 +53,10 @@ CLASS ZCL_IM_HU_BASICS_HUHDR IMPLEMENTATION.
     IF sy-subrc <> 0.
       EXIT.
     ENDIF.
-* Build up field catalog
+    "Build up field catalog
     DATA(ls_fields) = VALUE /scwm/pak_com_i( pak_locid = ls_t300md-scuguid
                                              pak_rule  = ls_wcr-packprofile ).
-* Get packaging specification
+    "Get packaging specification
     CALL FUNCTION '/SCWM/PS_FIND_AND_EVALUATE'
       EXPORTING
         is_fields       = ls_fields
@@ -71,7 +71,7 @@ CLASS ZCL_IM_HU_BASICS_HUHDR IMPLEMENTATION.
     IF sy-subrc <> 0.
       EXIT.
     ENDIF.
-* Determine HU type from packspec
+    "Determine HU type from packspec
     LOOP AT lt_packspec INTO DATA(lv_guid_ps).
       CLEAR: lt_pscont.
       CALL FUNCTION '/SCWM/PS_PACKSPEC_GET'
@@ -98,8 +98,8 @@ CLASS ZCL_IM_HU_BASICS_HUHDR IMPLEMENTATION.
       IF level-hu_matid IS INITIAL.
         CONTINUE.
       ENDIF.
-* Set HU type from packaging specification
-* Only if packmat of HU and packspec is the same
+      "Set HU type from packaging specification
+      "Only if packmat of HU and packspec is the same
       IF level-hu_matid EQ cs_huhdr-pmat_guid
       AND NOT level-hutyp IS INITIAL.
         cs_huhdr-letyp = level-hutyp.
